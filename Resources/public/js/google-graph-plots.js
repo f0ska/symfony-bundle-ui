@@ -36,18 +36,30 @@ class GoogleGraphPlots {
     }
 
     draw() {
-        let graphChartData = new google.visualization.DataTable();
-        graphChartData.addColumn('datetime', 'Date');
-        graphChartData.addColumn('number', 'Value');
-
         let rows = [];
+        let headers;
         for (let key in this.source) {
+            let values = this.source[key]['v'] ? this.source[key]['v'] : 0.;
+            if (typeof values !== 'object') {
+                values = {'Value': values};
+            }
+
             let row = [];
+            headers = [];
             row.push(this.getDateFromString(this.source[key]['d']));
-            row.push(this.source[key]['v'] ? this.source[key]['v'] : 0.);
+            for (let keyV in values) {
+                row.push(values[keyV]);
+                headers.push(keyV);
+            }
+
             rows.push(row);
         }
 
+        let graphChartData = new google.visualization.DataTable();
+        graphChartData.addColumn('datetime', 'Date');
+        headers.forEach(function(item, index) {
+            graphChartData.addColumn('number', item);
+        });
         graphChartData.addRows(rows);
 
         let date_formatter = new google.visualization.DateFormat({pattern: this.dateFormat});
@@ -93,6 +105,9 @@ class GoogleGraphPlots {
 
     getDateFromString(value) {
         var date = value.replace(/[^0-9]/g, ' ').split(' ');
+        if (date.length === 3) {
+            return new Date(1, 1, 1, date[0], date[1], date[2]);
+        }
 
         return new Date(date[0], date[1]-1, date[2], date[3], date[4], date[5]);
     }
