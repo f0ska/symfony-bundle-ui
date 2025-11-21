@@ -328,18 +328,34 @@ class GridRequest
                 continue;
             }
 
-            if (!$column->getFilter()->isRange()) {
-                $this->filters[$key] = trim((string) $value);
-                if ($this->filters[$key] === '') {
+            if ($column->getFilter()->isRange()) {
+                $this->filters[$key] = $this->validateRangeFilter($value);
+                if (empty($this->filters[$key])) {
                     unset($this->filters[$key]);
                 }
                 continue;
             }
 
-            $this->filters[$key] = $this->validateRangeFilter($value);
-            if (empty($this->filters[$key])) {
-                unset($this->filters[$key]);
+            if ($column->getFilter()->isMultipleValues()) {
+                if (!is_array($value)) {
+                    $value = [$value];
+                }
+                foreach ($value as $subK => $subV) {
+                    $subV = trim((string) $subV);
+                    if ($subV === '') {
+                        unset($value[$subK]);
+                    }
+                }
+                $this->filters[$key] = array_values($value);
+                if (empty($this->filters[$key])) {
+                    unset($this->filters[$key]);
+                }
                 continue;
+            }
+
+            $this->filters[$key] = trim((string) $value);
+            if ($this->filters[$key] === '') {
+                unset($this->filters[$key]);
             }
         }
 
@@ -505,6 +521,24 @@ class GridRequest
         }
 
         return $this->filters[$key][$subKey];
+    }
+
+    public function getMultipleValuesFilter(string $key): array
+    {
+        if (!array_key_exists($key, $this->filters)) {
+            return [];
+        }
+
+        $values = $this->filters[$key];
+        if ($values === null) {
+            return [];
+        }
+
+        if (!is_array($values)) {
+            $values = [$values];
+        }
+
+        return $values;
     }
 
     /**
