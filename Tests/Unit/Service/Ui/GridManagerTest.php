@@ -650,13 +650,6 @@ class GridManagerTest extends AbstractTest
         return $this->prepareManager($factory, $container, $definition, $getValues);
     }
 
-    /**
-     * @param GridFactory $factory
-     * @param ContainerInterface $container
-     * @param GridDefinitionInterface $definition
-     * @param array $getValues
-     * @return GridManager
-     */
     private function prepareManager(
         GridFactory $factory,
         ContainerInterface $container,
