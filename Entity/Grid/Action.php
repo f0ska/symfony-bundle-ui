@@ -34,14 +34,6 @@ class Action implements PositionInterface
      */
     private $buildCallback = null;
 
-    /**
-     * Action constructor.
-     * @param string $code
-     * @param string $name
-     * @param int $position
-     * @param string $routeName
-     * @param array $routeParams
-     */
     public function __construct(
         string $code,
         string $name,

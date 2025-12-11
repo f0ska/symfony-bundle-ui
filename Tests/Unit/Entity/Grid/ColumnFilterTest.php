@@ -13,30 +13,35 @@ class ColumnFilterTest extends TestCase
         $this->assertSame(false, $entity->isQuickSearch());
         $this->assertSame(false, $entity->isRange());
         $this->assertSame(false, $entity->isExactValue());
+        $this->assertSame(false, $entity->isMultipleValues());
 
         $entity = new Grid\ColumnFilter(false);
         $this->assertSame(false, $entity->isFilterable());
         $this->assertSame(false, $entity->isQuickSearch());
         $this->assertSame(false, $entity->isRange());
         $this->assertSame(false, $entity->isExactValue());
+        $this->assertSame(false, $entity->isMultipleValues());
 
         $entity = new Grid\ColumnFilter(true, true);
         $this->assertSame(true, $entity->isFilterable());
         $this->assertSame(true, $entity->isQuickSearch());
         $this->assertSame(false, $entity->isRange());
         $this->assertSame(false, $entity->isExactValue());
+        $this->assertSame(false, $entity->isMultipleValues());
 
         $entity = new Grid\ColumnFilter(true, false);
         $this->assertSame(true, $entity->isFilterable());
         $this->assertSame(false, $entity->isQuickSearch());
         $this->assertSame(false, $entity->isRange());
         $this->assertSame(false, $entity->isExactValue());
+        $this->assertSame(false, $entity->isMultipleValues());
 
         $entity = new Grid\ColumnFilter(false, true);
         $this->assertSame(false, $entity->isFilterable());
         $this->assertSame(true, $entity->isQuickSearch());
         $this->assertSame(false, $entity->isRange());
         $this->assertSame(false, $entity->isExactValue());
+        $this->assertSame(false, $entity->isMultipleValues());
 
         $entity->useQuickSearch(false);
         $entity->useFilterable(true);
@@ -44,6 +49,7 @@ class ColumnFilterTest extends TestCase
         $this->assertSame(false, $entity->isQuickSearch());
         $this->assertSame(false, $entity->isRange());
         $this->assertSame(false, $entity->isExactValue());
+        $this->assertSame(false, $entity->isMultipleValues());
 
         $entity->useFilterable(false);
         $entity->useQuickSearch(true);
@@ -51,30 +57,43 @@ class ColumnFilterTest extends TestCase
         $this->assertSame(true, $entity->isQuickSearch());
         $this->assertSame(false, $entity->isExactValue());
         $this->assertSame(false, $entity->isRange());
+        $this->assertSame(false, $entity->isMultipleValues());
 
         $entity = new Grid\ColumnFilter(false);
         $this->assertSame(false, $entity->isFilterable());
         $this->assertSame(false, $entity->isQuickSearch());
         $this->assertSame(false, $entity->isRange());
         $this->assertSame(false, $entity->isExactValue());
+        $this->assertSame(false, $entity->isMultipleValues());
 
         $entity->useRange(true);
         $this->assertSame(false, $entity->isQuickSearch());
         $this->assertSame(false, $entity->isFilterable());
         $this->assertSame(true, $entity->isRange());
         $this->assertSame(false, $entity->isExactValue());
+        $this->assertSame(false, $entity->isMultipleValues());
 
         $entity = new Grid\ColumnFilter(false);
         $this->assertSame(false, $entity->isQuickSearch());
         $this->assertSame(false, $entity->isFilterable());
         $this->assertSame(false, $entity->isRange());
         $this->assertSame(false, $entity->isExactValue());
+        $this->assertSame(false, $entity->isMultipleValues());
 
         $entity->useExactValue(true);
         $this->assertSame(false, $entity->isFilterable());
         $this->assertSame(false, $entity->isQuickSearch());
         $this->assertSame(false, $entity->isRange());
         $this->assertSame(true, $entity->isExactValue());
+        $this->assertSame(false, $entity->isMultipleValues());
+
+        $entity = new Grid\ColumnFilter();
+        $entity->useMultipleValues(true);
+        $this->assertSame(false, $entity->isQuickSearch());
+        $this->assertSame(false, $entity->isFilterable());
+        $this->assertSame(false, $entity->isRange());
+        $this->assertSame(false, $entity->isExactValue());
+        $this->assertSame(true, $entity->isMultipleValues());
 
         $type = new Grid\ColumnType('select');
 

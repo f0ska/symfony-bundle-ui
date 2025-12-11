@@ -29,6 +29,15 @@
                 'input_name':  'fl[' ~ column.code ~ '][to]',
                 'input_value': manager.request.filter(column.code, 'to')
             } %}
+{%     elseif column.filter.isMultipleValues %}
+{%         include column.filter.templateFilter with {
+                'manager':     manager,
+                'column':      column,
+                'label':       column.name|trans,
+                'input_id':    'filter_' ~ column.code,
+                'input_name':  'fl[' ~ column.code ~ ']',
+                'input_values': manager.request.multipleValuesFilter(column.code)
+            } %}
 {%     else %}
 {%         include column.filter.templateFilter with {
                 'manager':     manager,

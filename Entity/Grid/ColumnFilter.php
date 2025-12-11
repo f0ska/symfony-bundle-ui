@@ -19,7 +19,9 @@ class ColumnFilter
     private bool $quickSearch;
     private bool $range;
     private bool $exactValue;
+    private bool $multipleValues;
     private ?string $templateFilter = null;
+    private ?string $columnType = null;
 
     /**
      * Pager constructor.
@@ -35,16 +37,12 @@ class ColumnFilter
         $this->quickSearch = $quickSearch;
         $this->range = false;
         $this->exactValue = false;
+        $this->multipleValues = false;
     }
 
-    public function linkToColumnType(ColumnType $columnType): bool
+    public function linkToColumnType(ColumnType $columnType): void
     {
-        if ($this->templateFilter !== null) {
-            return true;
-        }
-
-        $this->templateFilter = '@SpipuUi/grid/filter/' . $columnType->getType() . '.html.twig';
-        return true;
+        $this->columnType = $columnType->getType();
     }
 
     public function isFilterable(): bool
@@ -70,6 +68,7 @@ class ColumnFilter
     public function useRange(bool $range = true): self
     {
         $this->range = $range;
+        $this->multipleValues = false;
 
         return $this;
     }
@@ -93,7 +92,16 @@ class ColumnFilter
 
     public function getTemplateFilter(): string
     {
-        return $this->templateFilter;
+        if ($this->templateFilter !== null) {
+            return $this->templateFilter;
+        }
+
+        $templateCode = $this->columnType;
+        if ($this->multipleValues) {
+            $templateCode .= '-multiple';
+        }
+
+        return '@SpipuUi/grid/filter/' . $templateCode . '.html.twig';
     }
 
     public function setTemplateFilter(string $templateFilter): self
@@ -113,6 +121,19 @@ class ColumnFilter
     public function useQuickSearch(bool $quickSearch): self
     {
         $this->quickSearch = $quickSearch;
+
+        return $this;
+    }
+
+    public function isMultipleValues(): bool
+    {
+        return $this->multipleValues;
+    }
+
+    public function useMultipleValues(bool $multipleValues): ColumnFilter
+    {
+        $this->multipleValues = $multipleValues;
+        $this->range = false;
 
         return $this;
     }
